@@ -162,14 +162,45 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if (arguments.length === 2) {
-      let startIndex = 1;
-      accumulator = collection[0]
-    } else {
-      let startIndex = 0
-    }
-    for (let i = startIndex; i < collection.length; i++) {
-      accumulator = iterator(accumulator, collection[i])
+    let oldAcc;
+    let newAcc;
+    if (!Array.isArray(collection)) {
+      if (arguments.length === 3) {
+        oldAcc = accumulator;
+        for (let el in collection) {
+          newAcc = iterator(oldAcc, collection[el]);
+          oldAcc = newAcc
+        }
+        return newAcc 
+      } else {
+        let usedFirst = false;
+        for (let el in collection) {
+          if (usedFirst = false) {
+            oldAcc = el;
+            usedFirst = true;
+          }
+          newAcc = iterator(oldAcc, collection[el]);
+          oldAcc = newAcc
+        }
+        return newAcc  
+      } 
+    } 
+    if (Array.isArray(collection)) {
+      let startIndex;
+      if (arguments.length === 3) {
+        oldAcc = accumulator;
+        newAcc = accumulator;
+        startIndex = 0;
+      } else {
+        oldAcc = collection[0];
+        newAcc = collection[0];
+        startIndex = 1;
+      }
+      for (let i = startIndex; i < collection.length; i++) {
+        newAcc = iterator(oldAcc, collection[i]);
+        oldAcc = newAcc      
+      }
+      return newAcc
     }
   };
 
