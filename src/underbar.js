@@ -124,9 +124,10 @@
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     let result = [];
-    for (let i = 0; i < collection.length; i++) {
-      result.push(iterator(collection[i], i, collection))
+    let pushIterator = function(pval, pel, pcol){
+      result.push(iterator(pval, pel, pcol))
     }
+    _.each(collection, pushIterator)
     return result
   };
 
@@ -329,7 +330,7 @@
   };
 
 
-  // Memorize an expensive function's results by storing them. You may assume
+  // Memoize an expensive function's results by storing them. You may assume
   // that the function only takes primitives as arguments.
   // memoize could be renamed to oncePerUniqueArgumentList; memoize does the
   // same thing as once, but based on many sets of unique arguments.
